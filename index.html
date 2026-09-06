@@ -25,6 +25,7 @@
       <button class="mode active" data-mode="heat"><span class="mode-icon heat">T</span>Heat</button>
       <button class="mode" data-mode="mass"><span class="mode-icon mass">C</span>Mass</button>
       <button class="mode" data-mode="momentum"><span class="mode-icon momentum">u</span>Momentum</button>
+      <button class="mode" id="examplesTab"><span class="mode-icon examples">✓</span>Worked-out examples</button>
     </nav>
 
     <section class="workspace">
@@ -113,9 +114,17 @@
           <p>Global conservation is compared with the resolved internal field.</p>
         </div>
 
+        <div class="continuity-card">
+          <span>CONTINUITY &amp; LOCAL CONSERVATION</span>
+          <div class="mass-continuity">∂ρ/∂t + d(ρu<sub>x</sub>)/dx = 0</div>
+          <p>Mass continuity is always enforced. For constant-density, one-dimensional flow in a constant-area channel, du<sub>x</sub>/dx = 0.</p>
+          <div class="local-balance" id="localBalance">ρc<sub>p</sub> ∂T/∂t = −dq<sub>x</sub>/dx + S<sub>T</sub></div>
+          <small id="localBalanceText">Energy accumulation equals net heat-flux inflow plus generation.</small>
+        </div>
+
         <div class="law-card">
           <span id="lawName">FOURIER'S LAW</span>
-          <div id="lawEquation">q = −k ∇T</div>
+          <div id="lawEquation">q<sub>x</sub> = −k dT/dx</div>
           <p id="lawText">Conductivity connects the temperature gradient to heat flux.</p>
         </div>
 
@@ -141,6 +150,71 @@
           <div><span>Péclet number</span><strong id="numberTwo">0.00</strong></div>
         </div>
       </aside>
+    </section>
+
+    <section class="examples-page" id="examplesPage" hidden>
+      <header class="examples-header">
+        <p class="eyebrow">FROM BALANCE TO FIELD</p>
+        <h2>Worked-out examples</h2>
+        <p>Follow the reduction from the conservation statement to the one-dimensional transport equation, then load the case into the solver.</p>
+      </header>
+      <div class="examples-grid">
+        <article class="example-card heat-example">
+          <div class="example-top"><span>HEAT · TRANSIENT</span><strong>01</strong></div>
+          <h3>Heating a cold slab from one face</h3>
+          <p class="given"><b>Given:</b> Initially uniform slab, left face at 650 K, right face insulated.</p>
+          <ol>
+            <li><span>Conservation</span><code>accumulation = net conduction in</code></li>
+            <li><span>Local balance</span><code>ρcₚ ∂T/∂t = −dqₓ/dx</code></li>
+            <li><span>Fourier law</span><code>qₓ = −k dT/dx</code></li>
+            <li><span>Governing equation</span><code>∂T/∂t = α ∂²T/∂x²</code></li>
+          </ol>
+          <div class="example-result"><span>Prediction</span>Heat penetrates from the left; total energy rises by the net boundary heat input.</div>
+          <button class="load-example" data-example="heated-slab">Load in solver</button>
+        </article>
+
+        <article class="example-card heat-example">
+          <div class="example-top"><span>HEAT · COMPOSITE</span><strong>02</strong></div>
+          <h3>Two materials carrying the same heat flux</h3>
+          <p class="given"><b>Given:</b> A low-conductivity layer is placed at the centre of the slab.</p>
+          <ol>
+            <li><span>Steady conservation</span><code>dqₓ/dx = 0</code></li>
+            <li><span>Flux continuity</span><code>qₓ,1 = qₓ,2</code></li>
+            <li><span>Fourier law</span><code>dT/dx = −qₓ/k</code></li>
+            <li><span>Consequence</span><code>lower k ⇒ larger |dT/dx|</code></li>
+          </ol>
+          <div class="example-result"><span>Key distinction</span>The global energy balance sees one heat rate; the field reveals where the temperature drop occurs.</div>
+          <button class="load-example" data-example="composite-wall">Load in solver</button>
+        </article>
+
+        <article class="example-card mass-example">
+          <div class="example-top"><span>MASS · DIFFUSION</span><strong>03</strong></div>
+          <h3>Solute entering a diffusion couple</h3>
+          <p class="given"><b>Given:</b> Solute concentration is imposed on the left of an initially solute-free layer.</p>
+          <ol>
+            <li><span>Species balance</span><code>∂cₐ/∂t = −dJₐ,x/dx</code></li>
+            <li><span>Fick law</span><code>Jₐ,x = −Dₐ dcₐ/dx</code></li>
+            <li><span>Constant Dₐ</span><code>∂cₐ/∂t = Dₐ ∂²cₐ/∂x²</code></li>
+            <li><span>Time scale</span><code>tᴅ ~ L²/Dₐ</code></li>
+          </ol>
+          <div class="example-result"><span>Prediction</span>Increasing diffusivity broadens the concentration profile and shortens homogenisation time.</div>
+          <button class="load-example" data-example="diffusion-couple">Load in solver</button>
+        </article>
+
+        <article class="example-card momentum-example">
+          <div class="example-top"><span>MOMENTUM · COUETTE</span><strong>04</strong></div>
+          <h3>Momentum diffusion from a moving wall</h3>
+          <p class="given"><b>Given:</b> Flow is in x; velocity u<sub>x</sub> varies only across y.</p>
+          <ol>
+            <li><span>Momentum balance</span><code>ρ ∂uₓ/∂t = dτₓᵧ/dy</code></li>
+            <li><span>Newtonian stress</span><code>τₓᵧ = μ duₓ/dy</code></li>
+            <li><span>Momentum flux</span><code>Jₚₓ,ᵧ = −μ duₓ/dy = −τₓᵧ</code></li>
+            <li><span>Steady solution</span><code>uₓ(y) is linear</code></li>
+          </ol>
+          <div class="example-result"><span>Sign convention</span>Shear stress follows the shear rate; molecular momentum flux points down the velocity gradient.</div>
+          <button class="load-example" data-example="couette">Load in solver</button>
+        </article>
+      </div>
     </section>
   </main>
   <script src="app.js"></script>
