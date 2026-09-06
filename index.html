@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive laboratory for conservation, heat, mass and momentum transport." />
+  <title>Transport Laboratory</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">CONSERVATION → GRADIENT → FLUX</p>
+        <h1>Transport Laboratory</h1>
+      </div>
+      <div class="sim-actions" aria-label="Simulation controls">
+        <button id="resetBtn" class="button ghost">Reset</button>
+        <button id="stepBtn" class="button ghost">Step</button>
+        <button id="runBtn" class="button primary">▶ Run</button>
+      </div>
+    </header>
+
+    <nav class="mode-tabs" aria-label="Transport process">
+      <button class="mode active" data-mode="heat"><span class="mode-icon heat">T</span>Heat</button>
+      <button class="mode" data-mode="mass"><span class="mode-icon mass">C</span>Mass</button>
+      <button class="mode" data-mode="momentum"><span class="mode-icon momentum">u</span>Momentum</button>
+    </nav>
+
+    <section class="workspace">
+      <aside class="panel controls-panel">
+        <div class="panel-heading">
+          <div><span class="step-number">01</span><h2>Shape the system</h2></div>
+          <p>Change a property or boundary. The cube resolves the consequence.</p>
+        </div>
+
+        <div class="control-group">
+          <div class="control-label"><label id="propertyLabel" for="property">Conductivity, k</label><output id="propertyValue">15 W m⁻¹ K⁻¹</output></div>
+          <input id="property" type="range" min="0" max="100" value="56" />
+        </div>
+
+        <div class="control-group" id="flowControl">
+          <div class="control-label"><label for="flow">Flow velocity, u</label><output id="flowValue">0.00 m s⁻¹</output></div>
+          <input id="flow" type="range" min="0" max="100" value="0" />
+        </div>
+
+        <div class="control-group">
+          <div class="control-label"><label id="leftLabel" for="leftBoundary">Inlet temperature</label><output id="leftValue">650 K</output></div>
+          <input id="leftBoundary" type="range" min="0" max="100" value="72" />
+        </div>
+
+        <div class="control-group" id="sourceControl">
+          <div class="control-label"><label id="sourceLabel" for="source">Volumetric heat source</label><output id="sourceValue">0 W m⁻³</output></div>
+          <input id="source" type="range" min="0" max="100" value="0" />
+        </div>
+
+        <div class="switch-row">
+          <div><strong>Layered material</strong><span>Lower property in the centre</span></div>
+          <button id="layerToggle" class="switch" role="switch" aria-checked="false"><span></span></button>
+        </div>
+
+        <div class="boundary-card">
+          <span class="boundary-kicker">RIGHT FACE</span>
+          <div class="segmented" id="rightBoundary">
+            <button data-bc="open" class="active">Open / zero gradient</button>
+            <button data-bc="fixed">Fixed value</button>
+          </div>
+        </div>
+
+        <button id="compareBtn" class="comparison-button">
+          <span>≋</span>
+          <div><strong>Same average, different field</strong><small>Create a gradient without changing the global inventory</small></div>
+        </button>
+      </aside>
+
+      <section class="panel lab-panel">
+        <div class="panel-heading lab-heading">
+          <div><span class="step-number">02</span><h2>See inside the control volume</h2></div>
+          <div class="time-readout"><span>SIMULATION TIME</span><strong id="timeValue">0.00 s</strong></div>
+        </div>
+
+        <div class="view-switcher" aria-label="Field display">
+          <button class="view active" data-view="field">Field</button>
+          <button class="view" data-view="gradient">Gradient</button>
+          <button class="view" data-view="flux">Flux</button>
+          <button class="view" data-view="cells">Cells</button>
+        </div>
+
+        <div class="cube-stage">
+          <div class="face-label left-face-label" id="leftFaceLabel">650 K</div>
+          <div class="flow-arrow left-arrow"><span></span></div>
+          <div class="cube" id="cube" aria-label="One-dimensional transport field represented in a cube">
+            <div class="cube-top"></div>
+            <div class="cube-side"></div>
+            <div class="field-cells" id="fieldCells"></div>
+            <div class="particle-layer" id="particles"></div>
+            <div class="layer-marker" id="layerMarker">low k</div>
+          </div>
+          <div class="flow-arrow right-arrow"><span></span></div>
+          <div class="face-label right-face-label" id="rightFaceLabel">OPEN</div>
+          <div class="legend"><span id="legendMin">300 K</span><i id="legendBar"></i><span id="legendMax">650 K</span></div>
+        </div>
+
+        <div class="profile-wrap">
+          <div class="profile-title"><strong id="profileTitle">Temperature field, T(x)</strong><span id="profileHint">Drag the controls to reshape the field</span></div>
+          <svg id="profilePlot" viewBox="0 0 700 190" role="img" aria-label="Live field and flux profile"></svg>
+        </div>
+      </section>
+
+      <aside class="panel insight-panel">
+        <div class="panel-heading">
+          <div><span class="step-number">03</span><h2>Account for everything</h2></div>
+          <p>Global conservation is compared with the resolved internal field.</p>
+        </div>
+
+        <div class="law-card">
+          <span id="lawName">FOURIER'S LAW</span>
+          <div id="lawEquation">q = −k ∇T</div>
+          <p id="lawText">Conductivity connects the temperature gradient to heat flux.</p>
+        </div>
+
+        <div class="ledger">
+          <div class="ledger-title"><strong>Conservation ledger</strong><span id="balanceStatus"><i></i> BALANCED</span></div>
+          <div class="ledger-row"><span>Initial inventory</span><strong id="initialInventory">—</strong></div>
+          <div class="ledger-row positive"><span>Entered through faces</span><strong id="entered">—</strong></div>
+          <div class="ledger-row negative"><span>Left through faces</span><strong id="left">—</strong></div>
+          <div class="ledger-row source"><span>Generated internally</span><strong id="generated">—</strong></div>
+          <div class="ledger-row total"><span>Current inventory</span><strong id="currentInventory">—</strong></div>
+          <div class="balance-equation"><span>initial + entered − left + generated</span><strong id="balanceEquation">= current</strong></div>
+          <div class="error-row"><span>Numerical balance error</span><strong id="balanceError">0.00%</strong></div>
+        </div>
+
+        <div class="blindspot-card">
+          <span>WHAT THE GLOBAL BALANCE CANNOT SEE</span>
+          <strong id="blindspotValue">Maximum gradient: 0 K m⁻¹</strong>
+          <p id="blindspotText">The total energy can remain unchanged while internal temperature gradients drive heat transfer.</p>
+        </div>
+
+        <div class="numbers" id="dimensionlessNumbers">
+          <div><span>Fourier number</span><strong id="numberOne">0.00</strong></div>
+          <div><span>Péclet number</span><strong id="numberTwo">0.00</strong></div>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
