@@ -206,12 +206,13 @@
           <h3>Momentum diffusion from a moving wall</h3>
           <p class="given"><b>Given:</b> Flow is in x; velocity u<sub>x</sub> varies only across y.</p>
           <ol>
-            <li><span>Momentum balance</span><code>ρ ∂uₓ/∂t = dτₓᵧ/dy</code></li>
-            <li><span>Newtonian stress</span><code>τₓᵧ = μ duₓ/dy</code></li>
-            <li><span>Momentum flux</span><code>Jₚₓ,ᵧ = −μ duₓ/dy = −τₓᵧ</code></li>
+            <li><span>Continuity</span><code>∂u<sub>x</sub>/∂x + ∂u<sub>y</sub>/∂y = 0 → 0 = 0</code></li>
+            <li><span>Momentum balance</span><code>ρ ∂u<sub>x</sub>/∂t = −dτ<sub>yx</sub>/dy</code></li>
+            <li><span>Newtonian flux law</span><code>τ<sub>yx</sub> = −μ du<sub>x</sub>/dy</code></li>
+            <li><span>Index meaning</span><code>y direction; x-momentum</code></li>
             <li><span>Steady solution</span><code>uₓ(y) is linear</code></li>
           </ol>
-          <div class="example-result"><span>Sign convention</span>Shear stress follows the shear rate; molecular momentum flux points down the velocity gradient.</div>
+          <div class="example-result"><span>Sign convention</span>Here τ<sub>yx</sub> means x-momentum transported in the y direction, so it points down the velocity gradient.</div>
           <button class="load-example" data-example="couette">Load in solver</button>
         </article>
       </div>
