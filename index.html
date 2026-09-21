@@ -24,7 +24,7 @@
     <nav class="mode-tabs" aria-label="Transport process">
       <button class="mode active" data-mode="heat"><span class="mode-icon heat">T</span>Heat</button>
       <button class="mode" data-mode="mass"><span class="mode-icon mass">C</span>Mass</button>
-      <button class="mode" data-mode="momentum"><span class="mode-icon momentum">u</span>Momentum</button>
+      <button class="mode" data-mode="momentum"><span class="mode-icon momentum">v</span>Momentum</button>
       <button class="mode" id="examplesTab"><span class="mode-icon examples">✓</span>Worked-out examples</button>
     </nav>
 
@@ -40,14 +40,42 @@
           <input id="property" type="range" min="0" max="100" value="56" />
         </div>
 
+        <div class="condition-card initial-condition-card">
+          <div class="condition-heading">
+            <span>INITIAL CONDITION</span>
+            <strong id="initialEquation">T(x,0) = 300 K</strong>
+          </div>
+          <p>The field everywhere inside the domain immediately before the boundaries act.</p>
+          <div class="control-group compact">
+            <div class="control-label"><label id="initialLabel" for="initialValue">Initial temperature</label><output id="initialValueOutput">300 K</output></div>
+            <input id="initialValue" type="range" min="0" max="100" value="0" />
+          </div>
+          <span class="condition-kicker">INITIAL PROFILE</span>
+          <div class="segmented three-way" id="initialProfile">
+            <button data-ic="uniform" class="active">Uniform</button>
+            <button data-ic="step">Step</button>
+            <button data-ic="linear">Linear</button>
+          </div>
+          <small id="initialProfileText">The same initial value is assigned to every cell.</small>
+        </div>
+
         <div class="control-group" id="flowControl">
-          <div class="control-label"><label for="flow">Flow velocity, u</label><output id="flowValue">0.00 m s⁻¹</output></div>
+          <div class="control-label"><label for="flow">Flow velocity, v</label><output id="flowValue">0.00 m s⁻¹</output></div>
           <input id="flow" type="range" min="0" max="100" value="0" />
         </div>
 
-        <div class="control-group">
-          <div class="control-label"><label id="leftLabel" for="leftBoundary">Inlet temperature</label><output id="leftValue">650 K</output></div>
-          <input id="leftBoundary" type="range" min="0" max="100" value="72" />
+        <div class="condition-card boundary-condition-card">
+          <div class="condition-heading"><span>BOUNDARY CONDITIONS</span><strong>for t &gt; 0</strong></div>
+          <div class="control-group compact">
+            <div class="control-label"><label id="leftLabel" for="leftBoundary">Left-face temperature</label><output id="leftValue">650 K</output></div>
+            <input id="leftBoundary" type="range" min="0" max="100" value="72" />
+          </div>
+          <span class="condition-kicker">RIGHT FACE</span>
+          <div class="segmented" id="rightBoundary">
+            <button data-bc="open" class="active">Zero gradient</button>
+            <button data-bc="fixed">Fixed value</button>
+          </div>
+          <small id="boundaryText">Right face: zero diffusive flux. Advective outflow, if present, may leave.</small>
         </div>
 
         <div class="control-group" id="sourceControl">
@@ -58,14 +86,6 @@
         <div class="switch-row">
           <div><strong>Layered material</strong><span>Lower property in the centre</span></div>
           <button id="layerToggle" class="switch" role="switch" aria-checked="false"><span></span></button>
-        </div>
-
-        <div class="boundary-card">
-          <span class="boundary-kicker">RIGHT FACE</span>
-          <div class="segmented" id="rightBoundary">
-            <button data-bc="open" class="active">Open / zero gradient</button>
-            <button data-bc="fixed">Fixed value</button>
-          </div>
         </div>
 
         <button id="compareBtn" class="comparison-button">
@@ -116,8 +136,8 @@
 
         <div class="continuity-card">
           <span>CONTINUITY &amp; LOCAL CONSERVATION</span>
-          <div class="mass-continuity">∂ρ/∂t + d(ρu<sub>x</sub>)/dx = 0</div>
-          <p>Mass continuity is always enforced. For constant-density, one-dimensional flow in a constant-area channel, du<sub>x</sub>/dx = 0.</p>
+          <div class="mass-continuity">∂ρ/∂t + d(ρv<sub>x</sub>)/dx = 0</div>
+          <p>Mass continuity is always enforced. For constant-density, one-dimensional flow in a constant-area channel, dv<sub>x</sub>/dx = 0.</p>
           <div class="local-balance" id="localBalance">ρc<sub>p</sub> ∂T/∂t = −dq<sub>x</sub>/dx + S<sub>T</sub></div>
           <small id="localBalanceText">Energy accumulation equals net heat-flux inflow plus generation.</small>
         </div>
@@ -162,57 +182,87 @@
         <article class="example-card heat-example">
           <div class="example-top"><span>HEAT · TRANSIENT</span><strong>01</strong></div>
           <h3>Heating a cold slab from one face</h3>
-          <p class="given"><b>Given:</b> Initially uniform slab, left face at 650 K, right face insulated.</p>
+          <p class="problem-statement">A plane wall of thickness <b>L = 20 mm</b> is initially cold. At t = 0 its left face is suddenly brought to 650 K while the right face is insulated.</p>
+          <dl class="problem-data">
+            <div><dt>Domain</dt><dd>0 ≤ x ≤ L; one-dimensional plane wall</dd></div>
+            <div class="initial"><dt>Initial condition</dt><dd>T(x,0) = 300 K</dd></div>
+            <div><dt>Boundary conditions</dt><dd>T(0,t) = 650 K; &nbsp;∂T/∂x(L,t) = 0</dd></div>
+            <div><dt>Properties</dt><dd>k = 9.57 W m⁻¹ K⁻¹; ρc<sub>p</sub> = 3.0 MJ m⁻³ K⁻¹</dd></div>
+            <div><dt>Assumptions</dt><dd>Constant properties; no advection; no internal heat generation</dd></div>
+          </dl>
           <ol>
             <li><span>Conservation</span><code>accumulation = net conduction in</code></li>
             <li><span>Local balance</span><code>ρcₚ ∂T/∂t = −dqₓ/dx</code></li>
             <li><span>Fourier law</span><code>qₓ = −k dT/dx</code></li>
             <li><span>Governing equation</span><code>∂T/∂t = α ∂²T/∂x²</code></li>
+            <li><span>Closure</span><code>α = k/(ρcₚ)</code></li>
           </ol>
-          <div class="example-result"><span>Prediction</span>Heat penetrates from the left; total energy rises by the net boundary heat input.</div>
+          <div class="example-result"><span>Prediction and check</span>Heat penetrates from the left over a scale √(αt). The temperature remains between 300 K and 650 K, and the rise in stored energy must equal the integrated heat entering at x = 0.</div>
           <button class="load-example" data-example="heated-slab">Load in solver</button>
         </article>
 
         <article class="example-card heat-example">
           <div class="example-top"><span>HEAT · COMPOSITE</span><strong>02</strong></div>
           <h3>Two materials carrying the same heat flux</h3>
-          <p class="given"><b>Given:</b> A low-conductivity layer is placed at the centre of the slab.</p>
+          <p class="problem-statement">A 20 mm composite wall contains a 4 mm low-conductivity central layer. Its two faces are maintained at different temperatures until steady state is reached.</p>
+          <dl class="problem-data">
+            <div><dt>Domain</dt><dd>0 ≤ x ≤ 20 mm; interfaces at x = 8 and 12 mm</dd></div>
+            <div class="initial"><dt>Initial condition</dt><dd>Not needed for the final steady solution; use T(x,0) = 300 K to watch the transient approach</dd></div>
+            <div><dt>Boundary conditions</dt><dd>T(0) = 675 K; T(L) = 300 K</dd></div>
+            <div><dt>Properties</dt><dd>Outer layers: k; central layer: 0.12k</dd></div>
+            <div><dt>Interface conditions</dt><dd>T is continuous and q<sub>x</sub> is continuous</dd></div>
+          </dl>
           <ol>
             <li><span>Steady conservation</span><code>dqₓ/dx = 0</code></li>
             <li><span>Flux continuity</span><code>qₓ,1 = qₓ,2</code></li>
             <li><span>Fourier law</span><code>dT/dx = −qₓ/k</code></li>
             <li><span>Consequence</span><code>lower k ⇒ larger |dT/dx|</code></li>
           </ol>
-          <div class="example-result"><span>Key distinction</span>The global energy balance sees one heat rate; the field reveals where the temperature drop occurs.</div>
+          <div class="example-result"><span>Key distinction</span>The global energy balance sees one constant heat rate. The resolved field shows the steepest temperature gradient—and therefore most of the temperature drop—inside the low-k layer.</div>
           <button class="load-example" data-example="composite-wall">Load in solver</button>
         </article>
 
         <article class="example-card mass-example">
           <div class="example-top"><span>MASS · DIFFUSION</span><strong>03</strong></div>
-          <h3>Solute entering a diffusion couple</h3>
-          <p class="given"><b>Given:</b> Solute concentration is imposed on the left of an initially solute-free layer.</p>
+          <h3>Solute diffusing into a layer</h3>
+          <p class="problem-statement">A solute-free layer of thickness <b>L = 2 mm</b> is exposed at its left face to a maintained solute concentration; the right face is impermeable.</p>
+          <dl class="problem-data">
+            <div><dt>Domain</dt><dd>0 ≤ x ≤ 2 mm</dd></div>
+            <div class="initial"><dt>Initial condition</dt><dd>c<sub>A</sub>(x,0) = 0 mol m⁻³</dd></div>
+            <div><dt>Boundary conditions</dt><dd>c<sub>A</sub>(0,t) = 850 mol m⁻³; ∂c<sub>A</sub>/∂x(L,t) = 0</dd></div>
+            <div><dt>Properties</dt><dd>D<sub>A</sub> = 10⁻¹⁰ m² s⁻¹</dd></div>
+            <div><dt>Assumptions</dt><dd>Constant D<sub>A</sub>; no bulk flow; no homogeneous reaction</dd></div>
+          </dl>
           <ol>
             <li><span>Species balance</span><code>∂cₐ/∂t = −dJₐ,x/dx</code></li>
             <li><span>Fick law</span><code>Jₐ,x = −Dₐ dcₐ/dx</code></li>
             <li><span>Constant Dₐ</span><code>∂cₐ/∂t = Dₐ ∂²cₐ/∂x²</code></li>
             <li><span>Time scale</span><code>tᴅ ~ L²/Dₐ</code></li>
           </ol>
-          <div class="example-result"><span>Prediction</span>Increasing diffusivity broadens the concentration profile and shortens homogenisation time.</div>
+          <div class="example-result"><span>Prediction and check</span>The penetration distance grows as √(D<sub>A</sub>t), while the diffusion time scales as L²/D<sub>A</sub>. Concentration must remain between 0 and 850 mol m⁻³.</div>
           <button class="load-example" data-example="diffusion-couple">Load in solver</button>
         </article>
 
         <article class="example-card momentum-example">
           <div class="example-top"><span>MOMENTUM · COUETTE</span><strong>04</strong></div>
           <h3>Momentum diffusion from a moving wall</h3>
-          <p class="given"><b>Given:</b> Flow is in x; velocity u<sub>x</sub> varies only across y.</p>
+          <p class="problem-statement">An incompressible Newtonian fluid occupies a 10 mm gap. At t = 0 the lower wall begins moving in the x direction while the upper wall remains fixed.</p>
+          <dl class="problem-data">
+            <div><dt>Domain</dt><dd>0 ≤ y ≤ H = 10 mm; velocity v<sub>x</sub>(y,t)</dd></div>
+            <div class="initial"><dt>Initial condition</dt><dd>v<sub>x</sub>(y,0) = 0</dd></div>
+            <div><dt>Boundary conditions</dt><dd>v<sub>x</sub>(0,t) = V<sub>w</sub> = 1.4 m s⁻¹; v<sub>x</sub>(H,t) = 0</dd></div>
+            <div><dt>Properties</dt><dd>ρ = 1000 kg m⁻³; μ = 0.0316 Pa s</dd></div>
+            <div><dt>Assumptions</dt><dd>Incompressible; no pressure gradient; no slip; v<sub>y</sub> = 0</dd></div>
+          </dl>
           <ol>
-            <li><span>Continuity</span><code>∂u<sub>x</sub>/∂x + ∂u<sub>y</sub>/∂y = 0 → 0 = 0</code></li>
-            <li><span>Momentum balance</span><code>ρ ∂u<sub>x</sub>/∂t = −dτ<sub>yx</sub>/dy</code></li>
-            <li><span>Newtonian flux law</span><code>τ<sub>yx</sub> = −μ du<sub>x</sub>/dy</code></li>
+            <li><span>Continuity</span><code>∂v<sub>x</sub>/∂x + ∂v<sub>y</sub>/∂y = 0 → 0 = 0</code></li>
+            <li><span>Momentum balance</span><code>ρ ∂v<sub>x</sub>/∂t = −dJ<sub>yx</sub><sup>(p)</sup>/dy</code></li>
+            <li><span>Momentum-flux law</span><code>J<sub>yx</sub><sup>(p)</sup> = −μ dv<sub>x</sub>/dy</code></li>
             <li><span>Index meaning</span><code>y direction; x-momentum</code></li>
-            <li><span>Steady solution</span><code>uₓ(y) is linear</code></li>
+            <li><span>Governing equation</span><code>∂vₓ/∂t = ν ∂²vₓ/∂y²</code></li>
+            <li><span>Steady solution</span><code>vₓ(y) = Vw(1 − y/H)</code></li>
           </ol>
-          <div class="example-result"><span>Sign convention</span>Here τ<sub>yx</sub> means x-momentum transported in the y direction, so it points down the velocity gradient.</div>
+          <div class="example-result"><span>Sign convention and check</span>J<sub>yx</sub><sup>(p)</sup> is the flux of x-momentum in the y direction and points down the velocity gradient. Momentum penetrates over √(νt); the final profile is linear.</div>
           <button class="load-example" data-example="couette">Load in solver</button>
         </article>
       </div>
