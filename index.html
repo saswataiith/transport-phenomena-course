@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Interactive laboratory for conservation, heat, mass and momentum transport." />
   <title>Transport Laboratory</title>
-  <link rel="stylesheet" href="styles.css?v=20260921c" />
+  <link rel="stylesheet" href="styles.css?v=20260921d" />
 </head>
 <body>
   <main class="app-shell">
@@ -177,12 +177,12 @@
 
         <div class="ledger">
           <div class="ledger-title"><strong>Conservation ledger</strong><span id="balanceStatus"><i></i> BALANCED</span></div>
-          <div class="ledger-row"><span>Initial inventory</span><strong id="initialInventory">—</strong></div>
-          <div class="ledger-row positive"><span>Entered through faces</span><strong id="entered">—</strong></div>
-          <div class="ledger-row negative"><span>Left through faces</span><strong id="left">—</strong></div>
-          <div class="ledger-row source"><span>Generated internally</span><strong id="generated">—</strong></div>
-          <div class="ledger-row total"><span>Current inventory</span><strong id="currentInventory">—</strong></div>
-          <div class="balance-equation"><span>initial + entered − left + generated</span><strong id="balanceEquation">= current</strong></div>
+          <div class="ledger-row"><span id="initialRowLabel">Initial inventory</span><strong id="initialInventory">—</strong></div>
+          <div class="ledger-row positive"><span id="enteredRowLabel">Entered through faces</span><strong id="entered">—</strong></div>
+          <div class="ledger-row negative"><span id="leftRowLabel">Left through faces</span><strong id="left">—</strong></div>
+          <div class="ledger-row source"><span id="generatedRowLabel">Generated internally</span><strong id="generated">—</strong></div>
+          <div class="ledger-row total"><span id="currentRowLabel">Current inventory</span><strong id="currentInventory">—</strong></div>
+          <div class="balance-equation"><span id="ledgerEquationLabel">initial + entered − left + generated</span><strong id="balanceEquation">= current</strong></div>
           <div class="error-row"><span>Numerical balance error</span><strong id="balanceError">0.00%</strong></div>
         </div>
 
@@ -295,6 +295,6 @@
       </div>
     </section>
   </main>
-  <script src="app.js?v=20260921c"></script>
+  <script src="app.js?v=20260921d"></script>
 </body>
 </html>
