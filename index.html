@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Interactive laboratory for conservation, heat, mass and momentum transport." />
   <title>Transport Laboratory</title>
-  <link rel="stylesheet" href="styles.css?v=20260921" />
+  <link rel="stylesheet" href="styles.css?v=20260921b" />
 </head>
 <body>
   <main class="app-shell">
@@ -33,6 +33,15 @@
         <div class="panel-heading">
           <div><span class="step-number">01</span><h2>Shape the system</h2></div>
           <p>Change a property or boundary. The cube resolves the consequence.</p>
+        </div>
+
+        <div class="condition-card solution-card">
+          <div class="condition-heading"><span>SOLUTION TYPE</span><strong id="solutionEquation">∂ψ/∂t ≠ 0</strong></div>
+          <div class="segmented" id="solutionMode">
+            <button data-solution="transient" class="active">Transient</button>
+            <button data-solution="steady">Steady state</button>
+          </div>
+          <small id="solutionText">The field and stored inventory evolve with time from the specified initial condition.</small>
         </div>
 
         <div class="control-group">
@@ -74,6 +83,10 @@
           <div class="segmented" id="rightBoundary">
             <button data-bc="open" class="active">Zero gradient</button>
             <button data-bc="fixed">Fixed value</button>
+          </div>
+          <div class="control-group compact right-value-control" id="rightValueControl" hidden>
+            <div class="control-label"><label id="rightValueLabel" for="rightBoundaryValue">Right-face value</label><output id="rightValueOutput">300 K</output></div>
+            <input id="rightBoundaryValue" type="range" min="0" max="100" value="0" />
           </div>
           <small id="boundaryText">Right face: zero diffusive flux. Advective outflow, if present, may leave.</small>
         </div>
@@ -125,6 +138,20 @@
         <div class="profile-wrap">
           <div class="profile-title"><strong id="profileTitle">Temperature field, T(x)</strong><span id="profileHint">Drag the controls to reshape the field</span></div>
           <svg id="profilePlot" viewBox="0 0 700 190" role="img" aria-label="Live field and flux profile"></svg>
+          <div class="profile-diagnostic" id="profileDiagnostic">
+            <strong>Transient field</strong><span>A straight temperature profile is not generally expected before steady state.</span>
+          </div>
+          <details class="plot-settings">
+            <summary>Plot axes and labels</summary>
+            <div class="plot-settings-grid">
+              <label>Horizontal-axis label<input id="xAxisLabel" type="text" value="Position, x (m)" /></label>
+              <label>Vertical-axis label<input id="yAxisLabel" type="text" value="Temperature, T (K)" /></label>
+              <label>Vertical minimum<input id="yAxisMin" type="number" value="300" step="any" /></label>
+              <label>Vertical maximum<input id="yAxisMax" type="number" value="800" step="any" /></label>
+            </div>
+            <label class="auto-axis"><input id="autoYAxis" type="checkbox" checked /> Automatically fit vertical limits to the displayed field</label>
+            <small>The horizontal limits remain the physical domain, 0 to L. Changing them would change the problem, not merely the graph.</small>
+          </details>
         </div>
       </section>
 
@@ -268,6 +295,6 @@
       </div>
     </section>
   </main>
-  <script src="app.js?v=20260921"></script>
+  <script src="app.js?v=20260921b"></script>
 </body>
 </html>
