@@ -16,7 +16,7 @@ Then open `http://localhost:8000`.
 
 - `index.html` — application structure and controls
 - `styles.css` — complete visual design and responsive layout
-- `app.js` — conservative one-dimensional finite-volume solver, physics modes, animation, plots, and conservation ledger
+- `app.js` — conservative one-dimensional finite-volume solver, physics modes, animation, plots, and conservation balance
 
 ## Numerical model
 
