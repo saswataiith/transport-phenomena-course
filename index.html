@@ -11,7 +11,7 @@
   <main class="app-shell">
     <header class="topbar">
       <div>
-        <p class="eyebrow">CONSERVATION → GRADIENT → FLUX</p>
+        <p class="eyebrow">HEAT, MASS AND MOMENTUM TRANSFER</p>
         <h1>Transport Laboratory</h1>
       </div>
       <div class="sim-actions" aria-label="Simulation controls">
@@ -28,11 +28,12 @@
       <button class="mode" id="examplesTab"><span class="mode-icon examples">✓</span>Worked-out examples</button>
     </nav>
 
+    <section class="quantity-panel"><h2>Quantities and units</h2><p>The coloured block represents a one-dimensional slab or fluid gap, not a three-dimensional solution. All conservation totals are per unit cross-sectional area. A positive flux points in the direction of increasing x (or increasing y for momentum).</p><div id="quantityDefinitions"></div></section>
     <section class="workspace">
       <aside class="panel controls-panel">
         <div class="panel-heading">
-          <div><span class="step-number">01</span><h2>Shape the system</h2></div>
-          <p>Change a property or boundary. The cube resolves the consequence.</p>
+          <div><span class="step-number">01</span><h2>Set the problem</h2></div>
+          <p>Choose the material property, initial condition and boundary conditions. The calculation is one-dimensional.</p>
         </div>
 
         <div class="condition-card solution-card">
@@ -41,7 +42,7 @@
             <button data-solution="transient" class="active">Transient</button>
             <button data-solution="steady">Steady state</button>
           </div>
-          <small id="solutionText">The field and stored inventory evolve with time from the specified initial condition.</small>
+          <small id="solutionText">The field changes with time from the specified initial condition.</small>
         </div>
 
         <div class="control-group">
@@ -54,7 +55,7 @@
             <span>INITIAL CONDITION</span>
             <strong id="initialEquation">T(x,0) = 300 K</strong>
           </div>
-          <p>The field everywhere inside the domain immediately before the boundaries act.</p>
+          <p>The value at every position at time t = 0.</p>
           <div class="control-group compact">
             <div class="control-label"><label id="initialLabel" for="initialValue">Initial temperature</label><output id="initialValueOutput">300 K</output></div>
             <input id="initialValue" type="range" min="0" max="100" value="0" />
@@ -103,13 +104,13 @@
 
         <button id="compareBtn" class="comparison-button">
           <span>≋</span>
-          <div><strong>Same average, different field</strong><small>Create a gradient without changing the global inventory</small></div>
+          <div><strong>Same average, different field</strong><small>Compare two profiles with the same total stored amount</small></div>
         </button>
       </aside>
 
       <section class="panel lab-panel">
         <div class="panel-heading lab-heading">
-          <div><span class="step-number">02</span><h2>See inside the control volume</h2></div>
+          <div><span class="step-number">02</span><h2>Calculated field</h2></div>
           <div class="time-readout"><span>SIMULATION TIME</span><strong id="timeValue">0.00 s</strong></div>
         </div>
 
@@ -136,7 +137,7 @@
         </div>
 
         <div class="profile-wrap">
-          <div class="profile-title"><strong id="profileTitle">Temperature field, T(x)</strong><span id="profileHint">Drag the controls to reshape the field</span></div>
+          <div class="profile-title"><strong id="profileTitle">Temperature field, T(x)</strong><span id="profileHint">Change a control to calculate a new profile</span></div>
           <svg id="profilePlot" viewBox="0 0 700 190" role="img" aria-label="Live field and flux profile"></svg>
           <div class="profile-diagnostic" id="profileDiagnostic">
             <strong>Transient field</strong><span>A straight temperature profile is not generally expected before steady state.</span>
@@ -157,8 +158,8 @@
 
       <aside class="panel insight-panel">
         <div class="panel-heading">
-          <div><span class="step-number">03</span><h2>Account for everything</h2></div>
-          <p>Global conservation is compared with the resolved internal field.</p>
+          <div><span class="step-number">03</span><h2>Check the conservation balance</h2></div>
+          <p>Compare the total stored amount with the amount entering, leaving and generated.</p>
         </div>
 
         <div class="continuity-card">
@@ -176,7 +177,7 @@
         </div>
 
         <div class="ledger">
-          <div class="ledger-title"><strong>Conservation ledger</strong><span id="balanceStatus"><i></i> BALANCED</span></div>
+          <div class="ledger-title"><strong>Conservation balance</strong><span id="balanceStatus"><i></i> BALANCED</span></div>
           <div class="ledger-row"><span id="initialRowLabel">Initial inventory</span><strong id="initialInventory">—</strong></div>
           <div class="ledger-row positive"><span id="enteredRowLabel">Entered through faces</span><strong id="entered">—</strong></div>
           <div class="ledger-row negative"><span id="leftRowLabel">Left through faces</span><strong id="left">—</strong></div>
@@ -187,7 +188,7 @@
         </div>
 
         <div class="blindspot-card">
-          <span>WHAT THE GLOBAL BALANCE CANNOT SEE</span>
+          <span>INFORMATION FROM THE SPATIAL PROFILE</span>
           <strong id="blindspotValue">Maximum gradient: 0 K m⁻¹</strong>
           <p id="blindspotText">The total energy can remain unchanged while internal temperature gradients drive heat transfer.</p>
         </div>
@@ -201,7 +202,7 @@
 
     <section class="examples-page" id="examplesPage" hidden>
       <header class="examples-header">
-        <p class="eyebrow">FROM BALANCE TO FIELD</p>
+        <p class="eyebrow">WORKED EXAMPLES</p>
         <h2>Worked-out examples</h2>
         <p>Follow the reduction from the conservation statement to the one-dimensional transport equation, then load the case into the solver.</p>
       </header>
@@ -222,10 +223,10 @@
             <li><span>Local balance</span><code>ρcₚ ∂T/∂t = −dqₓ/dx</code></li>
             <li><span>Fourier law</span><code>qₓ = −k dT/dx</code></li>
             <li><span>Governing equation</span><code>∂T/∂t = α ∂²T/∂x²</code></li>
-            <li><span>Closure</span><code>α = k/(ρcₚ)</code></li>
+            <li><span>Diffusivity definition</span><code>α = k/(ρcₚ)</code></li>
           </ol>
           <div class="example-result"><span>Prediction and check</span>Heat penetrates from the left over a scale √(αt). The temperature remains between 300 K and 650 K, and the rise in stored energy must equal the integrated heat entering at x = 0.</div>
-          <button class="load-example" data-example="heated-slab">Load in solver</button>
+          <details><summary>Quantities and units for this example</summary><div data-example-quantities="heat"></div></details><button class="load-example" data-example="heated-slab">Load in solver</button>
         </article>
 
         <article class="example-card heat-example">
@@ -245,8 +246,8 @@
             <li><span>Fourier law</span><code>dT/dx = −qₓ/k</code></li>
             <li><span>Consequence</span><code>lower k ⇒ larger |dT/dx|</code></li>
           </ol>
-          <div class="example-result"><span>Key distinction</span>The global energy balance sees one constant heat rate. The resolved field shows the steepest temperature gradient—and therefore most of the temperature drop—inside the low-k layer.</div>
-          <button class="load-example" data-example="composite-wall">Load in solver</button>
+          <div class="example-result"><span>Key distinction</span>At steady state, heat flux is the same through every layer. The temperature gradient is largest in the layer with the lowest conductivity.</div>
+          <details><summary>Quantities and units for this example</summary><div data-example-quantities="heat"></div></details><button class="load-example" data-example="composite-wall">Load in solver</button>
         </article>
 
         <article class="example-card mass-example">
@@ -267,7 +268,7 @@
             <li><span>Time scale</span><code>tᴅ ~ L²/Dₐ</code></li>
           </ol>
           <div class="example-result"><span>Prediction and check</span>The penetration distance grows as √(D<sub>A</sub>t), while the diffusion time scales as L²/D<sub>A</sub>. Concentration must remain between 0 and 850 mol m⁻³.</div>
-          <button class="load-example" data-example="diffusion-couple">Load in solver</button>
+          <details><summary>Quantities and units for this example</summary><div data-example-quantities="mass"></div></details><button class="load-example" data-example="diffusion-couple">Load in solver</button>
         </article>
 
         <article class="example-card momentum-example">
@@ -290,11 +291,11 @@
             <li><span>Steady solution</span><code>vₓ(y) = Vw(1 − y/H)</code></li>
           </ol>
           <div class="example-result"><span>Sign convention and check</span>J<sub>yx</sub><sup>(p)</sup> is the flux of x-momentum in the y direction and points down the velocity gradient. Momentum penetrates over √(νt); the final profile is linear.</div>
-          <button class="load-example" data-example="couette">Load in solver</button>
+          <details><summary>Quantities and units for this example</summary><div data-example-quantities="momentum"></div></details><button class="load-example" data-example="couette">Load in solver</button>
         </article>
       </div>
     </section>
   </main>
-  <script src="app.js?v=20260921d"></script>
+  <script src="quantities.js?v=20261006"></script><script src="app.js?v=20261006-plain"></script>
 </body>
 </html>

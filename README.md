@@ -4,19 +4,19 @@ A standalone, browser-only teaching application for comparing global conservatio
 
 ## Run locally
 
-No build step or server-side solver is required. Open `dist/index.html` in a modern browser. If the browser restricts local files, serve the directory with any static web server, for example:
+No build step or server-side solver is required. Open `index.html` in a modern browser. If the browser restricts local files, serve the directory with any static web server, for example:
 
 ```bash
-python3 -m http.server 8000 --directory dist
+python3 -m http.server 8000
 ```
 
 Then open `http://localhost:8000`.
 
 ## Files
 
-- `dist/index.html` — application structure and controls
-- `dist/styles.css` — complete visual design and responsive layout
-- `dist/app.js` — conservative one-dimensional finite-volume solver, physics modes, animation, plots, and conservation ledger
+- `index.html` — application structure and controls
+- `styles.css` — complete visual design and responsive layout
+- `app.js` — conservative one-dimensional finite-volume solver, physics modes, animation, plots, and conservation ledger
 
 ## Numerical model
 
@@ -30,4 +30,4 @@ where `φ` represents temperature, concentration, or velocity. Face fluxes are s
 
 ## Editing
 
-The application has no external JavaScript dependencies. Change the mode definitions and physical ranges near the top of `dist/app.js`; edit controls in `dist/index.html`; and edit the visual theme in `dist/styles.css`.
+The application has no external JavaScript dependencies. `quantities.js` defines the quantity and unit tables for each process and worked example. Change the mode definitions and physical ranges near the top of `app.js`; edit controls in `index.html`; and edit the visual theme in `styles.css`.
