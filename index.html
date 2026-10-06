@@ -28,7 +28,7 @@
       <button class="mode" id="examplesTab"><span class="mode-icon examples">✓</span>Worked-out examples</button>
     </nav>
 
-    <section class="quantity-panel"><h2>Quantities and units</h2><p>The coloured block represents a one-dimensional slab or fluid gap, not a three-dimensional solution. All conservation totals are per unit cross-sectional area. A positive flux points in the direction of increasing x (or increasing y for momentum).</p><div id="quantityDefinitions"></div></section>
+    <section class="quantity-panel" id="quantityPanel"><h2>Quantities and units</h2><p>The coloured block represents a one-dimensional slab or fluid gap, not a three-dimensional solution. All conservation totals are per unit cross-sectional area. A positive flux points in the direction of increasing x (or increasing y for momentum).</p><div id="quantityDefinitions"></div></section>
     <section class="workspace">
       <aside class="panel controls-panel">
         <div class="panel-heading">
@@ -70,7 +70,7 @@
         </div>
 
         <div class="control-group" id="flowControl">
-          <div class="control-label"><label for="flow">Flow velocity, v</label><output id="flowValue">0.00 m s⁻¹</output></div>
+          <div class="control-label"><label for="flow">Flow velocity, u</label><output id="flowValue">0.00 m s⁻¹</output></div>
           <input id="flow" type="range" min="0" max="100" value="0" />
         </div>
 
